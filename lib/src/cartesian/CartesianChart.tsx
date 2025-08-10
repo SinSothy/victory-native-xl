@@ -60,12 +60,12 @@ import { createFallbackChartState } from "./utils/createFallbackChartState";
 
 export type CartesianActionsHandle<T = undefined> =
   T extends ChartPressState<infer S>
-    ? S extends ChartPressStateInit
-      ? {
-          handleTouch: (v: T, x: number, y: number) => void;
-        }
-      : never
-    : never;
+  ? S extends ChartPressStateInit
+  ? {
+    handleTouch: (v: T, x: number, y: number) => void;
+  }
+  : never
+  : never;
 
 type CartesianChartProps<
   RawData extends Record<string, unknown>,
@@ -80,8 +80,8 @@ type CartesianChartProps<
   domain?: { x?: [number] | [number, number]; y?: [number] | [number, number] };
   viewport?: Viewport;
   chartPressState?:
-    | ChartPressState<{ x: InputFields<RawData>[XK]; y: Record<YK, number> }>
-    | ChartPressState<{ x: InputFields<RawData>[XK]; y: Record<YK, number> }>[];
+  | ChartPressState<{ x: InputFields<RawData>[XK]; y: Record<YK, number> }>
+  | ChartPressState<{ x: InputFields<RawData>[XK]; y: Record<YK, number> }>[];
   chartPressConfig?: {
     pan?: ChartPressPanConfig;
   };
@@ -111,9 +111,9 @@ type CartesianChartProps<
   customGestures?: ComposedGesture;
   actionsRef?: MutableRefObject<CartesianActionsHandle<
     | ChartPressState<{
-        x: InputFields<RawData>[XK];
-        y: Record<YK, number>;
-      }>
+      x: InputFields<RawData>[XK];
+      y: Record<YK, number>;
+    }>
     | undefined
   > | null>;
 };
@@ -581,48 +581,48 @@ function CartesianChartContent<
   const YAxisComponents =
     hasMeasuredLayoutSize && (axisOptions || yAxes)
       ? normalizedAxisProps.yAxes?.map((axis, index) => {
-          const yAxis = yAxes[index];
+        const yAxis = yAxes[index];
 
-          if (!yAxis) return null;
+        if (!yAxis) return null;
 
-          const primaryAxisProps = normalizedAxisProps.yAxes[0]!;
-          const primaryRescaled = zoomY.rescaleY(primaryYScale);
-          const rescaled = zoomY.rescaleY(yAxis.yScale);
+        const primaryAxisProps = normalizedAxisProps.yAxes[0]!;
+        const primaryRescaled = zoomY.rescaleY(primaryYScale);
+        const rescaled = zoomY.rescaleY(yAxis.yScale);
 
-          const rescaledTicks = axis.tickValues
-            ? downsampleTicks(axis.tickValues, axis.tickCount)
-            : axis.enableRescaling
-              ? rescaled.ticks(axis.tickCount)
-              : yAxis.yScale.ticks(axis.tickCount);
+        const rescaledTicks = axis.tickValues
+          ? downsampleTicks(axis.tickValues, axis.tickCount)
+          : axis.enableRescaling
+            ? rescaled.ticks(axis.tickCount)
+            : yAxis.yScale.ticks(axis.tickCount);
 
-          const primaryTicksRescaled = primaryAxisProps.tickValues
-            ? downsampleTicks(
-                primaryAxisProps.tickValues,
-                primaryAxisProps.tickCount,
-              )
-            : primaryAxisProps.enableRescaling
-              ? primaryRescaled.ticks(primaryAxisProps.tickCount)
-              : primaryYScale.ticks(primaryAxisProps.tickCount);
+        const primaryTicksRescaled = primaryAxisProps.tickValues
+          ? downsampleTicks(
+            primaryAxisProps.tickValues,
+            primaryAxisProps.tickCount,
+          )
+          : primaryAxisProps.enableRescaling
+            ? primaryRescaled.ticks(primaryAxisProps.tickCount)
+            : primaryYScale.ticks(primaryAxisProps.tickCount);
 
-          return (
-            <YAxis
-              key={index}
-              {...axis}
-              xScale={zoomX.rescaleX(xScale)}
-              yScale={rescaled}
-              yTicksNormalized={
-                index > 0 && !axis.tickValues
-                  ? normalizeYAxisTicks(
-                      primaryTicksRescaled,
-                      primaryRescaled,
-                      rescaled,
-                    )
-                  : rescaledTicks
-              }
-              chartBounds={chartBounds}
-            />
-          );
-        })
+        return (
+          <YAxis
+            key={index}
+            {...axis}
+            xScale={zoomX.rescaleX(xScale)}
+            yScale={rescaled}
+            yTicksNormalized={
+              index > 0 && !axis.tickValues
+                ? normalizeYAxisTicks(
+                  primaryTicksRescaled,
+                  primaryRescaled,
+                  rescaled,
+                )
+                : rescaledTicks
+            }
+            chartBounds={chartBounds}
+          />
+        );
+      })
       : null;
 
   const XAxisComponents =
@@ -649,7 +649,7 @@ function CartesianChartContent<
 
   // Body of the chart.
   const body = (
-    <Canvas style={{ flex: 1 }} onLayout={onLayout}>
+    <Canvas style={{ flex: 1 }}>
       {YAxisComponents}
       {XAxisComponents}
       {FrameComponent}
@@ -689,7 +689,10 @@ function CartesianChartContent<
   }
 
   return (
-    <GestureHandlerRootView style={{ flex: 1, overflow: "hidden" }}>
+    <GestureHandlerRootView
+      style={{ flex: 1, overflow: "hidden" }}
+      onLayout={onLayout}
+    >
       {body}
       <GestureHandler
         config={gestureHandlerConfig}
